@@ -7,5 +7,4 @@ public interface MenuMapper {
 
     List<Menu> queryForMenu();
 
-//    List<Menu> queryByParentId();
 }

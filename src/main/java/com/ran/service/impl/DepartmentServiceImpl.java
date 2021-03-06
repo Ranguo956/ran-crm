@@ -12,9 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 由于还需要考虑外键，部门表只做查询和新增
- */
 @Service
 public class DepartmentServiceImpl implements IDepartmentService {
 

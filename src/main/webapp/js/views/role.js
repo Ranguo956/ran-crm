@@ -18,13 +18,6 @@ $(function () {
         singleSelect: true,
         toolbar: '#role_datagrid_tb',
         pageList: [1, 5, 10, 20],
-        // onClickRow: function (rowIndex, rowData) {
-        //     if (rowData.state) {
-        //         roleDatagridEditAndDel.linkbutton("enable");
-        //     } else {
-        //         roleDatagridEditAndDel.linkbutton("disable");
-        //     }
-        // },
         columns: [
             [
                 {field: "sn", title: "角色编号", width: 1, align: 'center'},

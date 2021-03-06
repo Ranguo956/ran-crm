@@ -15,13 +15,6 @@ $(function () {
         singleSelect: true,
         toolbar: '#dep_datagrid_tb',
         pageList: [1, 5, 10, 20],
-        // onClickRow: function (rowIndex, rowData) {
-        //     if (rowData.state) {
-        //         depDatagridEditAndDel.linkbutton("enable");
-        //     } else {
-        //         depDatagridEditAndDel.linkbutton("disable");
-        //     }
-        // },
         columns: [
             [
                 {field: "sn", title: "sn", width: 1, align: 'center'},

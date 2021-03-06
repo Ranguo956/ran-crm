@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * 如果使用idea，在类名上右键 goto 即可自动创建测试类
- */
+
 @Service
 public class MenuServiceImpl implements IMenuService {
 

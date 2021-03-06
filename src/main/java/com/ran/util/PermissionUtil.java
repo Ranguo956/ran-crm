@@ -4,7 +4,7 @@ import com.ran.domain.Employee;
 import com.ran.domain.Menu;
 import com.ran.domain.Permission;
 import com.ran.service.IPermissionService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,16 +23,6 @@ public class PermissionUtil {
     public static boolean checkPermission(String function) {
 
         System.out.println(function);
-        /*
-         * 如果是超级管理员直接放行
-         *
-         * 拿到当前系统所有权限资源（需要权限验证的url），判断当前方法是否包含在其中
-         *   1.不包含：不需要权限判断，返回true，放行
-         *   2.包含，则进一步判断当前用户是否拥有该权限
-         *       1)拥有：返回true，放行
-         *       2)没有：返回false，拦截
-         *
-         * */
 
         // 如果是超级管理员，直接放行
         Employee currentUser = (Employee) UserContext.get().getSession().getAttribute(UserContext.USER_IN_SESSION);
@@ -73,7 +63,6 @@ public class PermissionUtil {
 
 
     public static void checkMenuPermission(List<Menu> menuList) {
-
 
         // 用户拥有的权限
         List<String> userPermissions = (List<String>) UserContext.get().getSession().getAttribute(UserContext.PERMISSION_IN_SESSION);

@@ -15,13 +15,6 @@ $(function () {
         singleSelect: true,
         toolbar: '#permission_datagrid_tb',
         pageList: [1, 5, 10, 20],
-        // onClickRow: function (rowIndex, rowData) {
-        //     if (rowData.state) {
-        //         permissionDatagridEditAndDel.linkbutton("enable");
-        //     } else {
-        //         permissionDatagridEditAndDel.linkbutton("disable");
-        //     }
-        // },
         columns: [
             [
                 {field: "name", title: "权限名称", width: 1, align: 'center'},
