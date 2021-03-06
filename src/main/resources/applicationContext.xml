@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 1、加载外部 properties 文件  -->
+    <context:property-placeholder location="classpath:jdbc.properties" system-properties-mode="NEVER"/>
+
+    <!-- 2、配置数据库连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!-- 3、配置 sessionFactory -->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- mybatis配置文件-->
+        <property name="configLocation" value="classpath:sqlMapConfig.xml"/>
+        <!-- mybatis映射文件-->
+        <property name="mapperLocations" value="classpath:com/ran/mapper/*Mapper.xml"/>
+    </bean>
+
+    <!-- 4、扫描 mapper 所在包为mapper创建实现类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ran.mapper"/>
+    </bean>
+
+    <!-- 5、开启注解扫描：扫描除了Controller以外的组件-->
+    <context:component-scan base-package="com.ran">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--以下进行申明事务控制-->
+
+    <!-- 6、设置平台事务管理器  -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 7、配置事务增强 -->
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            <!--设置所有读操作的事务为SUPPORRS，如果没有事务就不开启新事务-->
+            <tx:method name="get*" read-only="true" propagation="SUPPORTS"/>
+            <tx:method name="select*" read-only="true" propagation="SUPPORTS"/>
+            <tx:method name="query*" read-only="true" propagation="SUPPORTS"/>
+            <tx:method name="list*" read-only="true" propagation="SUPPORTS"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 8、配置 AOP 织入-->
+    <aop:config>
+        <aop:pointcut id="crudPointCut" expression="execution(* com.ran.service.*Service.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="crudPointCut"/>
+        <aop:aspect ref="logUtil">
+            <aop:after method="writeLog" pointcut-ref="crudPointCut"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!-- 9、配置工具类容器-->
+    <bean id="logUtil" class="com.ran.util.LogUtil"/>
+
+</beans>
